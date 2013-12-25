@@ -696,6 +696,12 @@ class DocumentManager implements ObjectManager
         $class = $this->getClassMetadata($className);
         $id = $this->unitOfWork->getDocumentIdentifier($document);
 
+        if (!$id) {
+            throw new \RuntimeException(
+                sprintf('Cannot create a DBRef without an identifier. UnitOfWork::getDocumentIdentifier() did not return an identifier for class %s', $class->name)
+            );
+        }
+
         if (isset($referenceMapping['simple']) && $referenceMapping['simple']) {
             return $class->getDatabaseIdentifierValue($id);
         }
